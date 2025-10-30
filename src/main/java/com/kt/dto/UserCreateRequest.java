@@ -8,12 +8,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-// bean validation이라는 기능을 통해서 유효성 겁사
-public class UserCreateRequest {
-	@NotBlank // null 이거나 공백이면 안됨
+// bean validation이라는 기능을 통해서 유효성 검사
+public record UserCreateRequest(
+	@NotBlank
 	String loginId,
 	@NotBlank
-	// 최소 8자이상 대소문자, 숫자, 특수문자 포함 -> 정규식
 	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^])[A-Za-z\\d!@#$%^]{8,}$")
 	String password,
 	@NotBlank
@@ -25,8 +24,8 @@ public class UserCreateRequest {
 	@Pattern(regexp = "^(0\\d{1,2})-(\\d{3,4})-(\\d{4})$")
 	String mobile,
 	@NotNull
-	Gender gender,  // " ", "남자"->NULL인 경우만 막아주면 됨
+	Gender gender,
 	@NotNull
 	LocalDate birthday
-} {
+) {
 }
