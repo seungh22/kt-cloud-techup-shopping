@@ -1,5 +1,6 @@
 package com.kt.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ public class User {
 	private String email;
 	private String mobile;
 	private Gender gender;
-	private String birthday;
+	private LocalDate birthday;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 }
