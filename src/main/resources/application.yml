@@ -19,4 +19,4 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
     show_sql: true #로컬에서만 ture로 사용
-    //
+
