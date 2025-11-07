@@ -18,6 +18,8 @@ import com.kt.dto.user.UserResponse;
 import com.kt.dto.user.UserUpdateRequest;
 import com.kt.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +34,18 @@ public class AdminUserController extends SwaggerAssistance {
 
 	//?key=value&page=1&keyword=asdasd
 	// 이름에
+	@Operation(
+		parameters = {
+			@Parameter(name = "keyword", description = "검색 키워드(이름)"),
+			@Parameter(name = "page", description = "페이지 번호", example = "1"),
+			@Parameter(name = "size", description = "페이지 크기", example = "10")
+		}
+	)
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResult<Page<UserResponse.Search>> search(
 		@RequestParam(required = false) String keyword,
-		Paging paging
+		@Parameter(hidden = true) Paging paging
 	) {
 		// pageable -> interface -> 구현체 : PageRequest
 		// 인터페이스가 존재하면 반드시 구현체(클래스)가 있다고 약속이 되어있다.
