@@ -11,9 +11,6 @@ import com.kt.domain.order.Order;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +19,7 @@ import lombok.NoArgsConstructor;
 // 2. 굳이? 같이쓰지뭐
 @Getter
 @Entity
+@NoArgsConstructor
 public class User extends BaseEntity {
 	private String loginId;
 	private String password;

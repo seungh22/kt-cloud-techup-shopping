@@ -11,7 +11,7 @@ import com.kt.common.ErrorCode;
 import com.kt.common.Preconditions;
 import com.kt.domain.user.User;
 import com.kt.dto.user.UserRequest;
-import com.kt.repository.UserRepository;
+import com.kt.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,7 +55,7 @@ public class UserService {
 		//검증 작업
 		// 긍정적인 상황만 생각하자 -> 패스워드가 이전것과 달라야 => 해피한
 		// 패스워드가 같으면 안되는데 => 넌 해피하지 않은 상황
-		Preconditions.validate(!user.getPassword().equals(oldPassword), ErrorCode.DOES_NOT_MATCH_OLD_PASSWORD);
+		Preconditions.validate(user.getPassword().equals(oldPassword), ErrorCode.DOES_NOT_MATCH_OLD_PASSWORD);
 		Preconditions.validate(!oldPassword.equals(password), ErrorCode.CAN_NOT_ALLOWED_SAME_PASSWORD);
 
 		user.changePassword(password);

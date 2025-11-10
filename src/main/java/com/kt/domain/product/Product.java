@@ -11,9 +11,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Product extends BaseEntity {
 	private String name;
 	private Long price;
@@ -59,5 +61,13 @@ public class Product extends BaseEntity {
 
 	public void increaseStock(Long quantity) {
 		this.stock += quantity;
+	}
+
+	public boolean canProvide(Long quantity) {
+		return this.stock >= quantity;
+	}
+
+	public void mapToOrderProduct(OrderProduct orderProduct) {
+		this.orderProducts.add(orderProduct);
 	}
 }
