@@ -15,27 +15,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 // 1. domain과 entity를 분리해야
-// 2. 굳이? 같이쓰지 뭐
+// 2. 굳이? 같이쓰지뭐
 @Getter
 @Entity
-
-	// 이 클래스가 controller 역할을 한다는 것을 알려주는 어노테이션 : @Controller, @RestController
-	// 똑같이 이 클래스가 Entity야 라고(데이터베이스랑 1:1매칭되는) 알려주는 어노테이션 : @Entity
-
-	// Persistent entity 'User' should have primary key
-	// id를 pk로 쓰고 있지만 쓰고 있다는걸 알려줘야 => @ID
 public class User extends BaseEntity {
 	private String loginId;
 	private String password;
 	private String name;
 	private String email;
 	private String mobile;
-	// enum을 다루는 방식 2가지
-	// ordinal : enum의 순서를 DB에 저장 => 절대 사용하지말자
+	// ordinal : enum의 순서를 DB에 저장 => 절대 사용하지마세욤
 	// string : enum의 값 DB에 저장
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
@@ -44,13 +37,15 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user")
 	private List<Order> orders = new ArrayList<>();
 
+
+
 	public User(String loginId, String password, String name, String email, String mobile, Gender gender,
 		LocalDate birthday, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.loginId = loginId;
 		this.password = password;
 		this.name = name;
-		this.mobile = mobile;
 		this.email = email;
+		this.mobile = mobile;
 		this.gender = gender;
 		this.birthday = birthday;
 		this.createdAt = createdAt;
