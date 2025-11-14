@@ -1,8 +1,12 @@
 package com.kt.service;
 
+import java.util.concurrent.TimeUnit;
+
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kt.common.CustomException;
 import com.kt.common.ErrorCode;
 import com.kt.common.Preconditions;
 import com.kt.domain.order.Order;
@@ -23,6 +27,7 @@ public class OrderService {
 	private final ProductRepository productRepository;
 	private final OrderRepository orderRepository;
 	private final OrderProductRepository orderProductRepository;
+	private final RedissonClient redissonClient;
 
 	//주문생성
 	public void create(
@@ -33,26 +38,44 @@ public class OrderService {
 		String receiverMobile,
 		Long quantity
 	) {
-		System.out.println("OrderService.create called " + productId);
-		var product = productRepository.findByIdPessimistic(productId).orElseThrow();
+		// 1. 여기서 획득 -> getLock에서 문자열을 인자로 줘야함
+		var rLock = redissonClient.getLock("stock");
 
-		Preconditions.validate(product.canProvide(quantity), ErrorCode.NOT_ENOUGH_STOCK);
+		// 1. try catch finally
+		// 2. 메소드레벨에서 throws 한다.
+		try {
+			var available = rLock.tryLock(6L, 5L, TimeUnit.MILLISECONDS);
 
-		var user = userRepository.findByIdOrThrow(userId, ErrorCode.NOT_FOUND_USER);
+			Preconditions.validate(available, ErrorCode.FAIL_ACQUIRED_LOCK);
 
-		var receiver = new Receiver(
-			receiverName,
-			receiverAddress,
-			receiverMobile
-		);
+			// var product = productRepository.findByIdPessimistic(productId).orElseThrow();
+			var product = productRepository.findByIdOrThrow(productId);
 
-		var order = orderRepository.save(Order.create(receiver, user));
-		var orderProduct = orderProductRepository.save(new OrderProduct(order, product, quantity));
+			// 2. 여기서 획득
+			Preconditions.validate(product.canProvide(quantity), ErrorCode.NOT_ENOUGH_STOCK);
 
-		// 주문생성완료
-		product.decreaseStock(quantity);
+			var user = userRepository.findByIdOrThrow(userId, ErrorCode.NOT_FOUND_USER);
 
-		product.mapToOrderProduct(orderProduct);
-		order.mapToOrderProduct(orderProduct);
+			var receiver = new Receiver(
+				receiverName,
+				receiverAddress,
+				receiverMobile
+			);
+
+			var order = orderRepository.save(Order.create(receiver, user));
+			var orderProduct = orderProductRepository.save(new OrderProduct(order, product, quantity));
+
+			// 주문생성완료
+			product.decreaseStock(quantity);
+
+			product.mapToOrderProduct(orderProduct);
+			order.mapToOrderProduct(orderProduct);
+		} catch (InterruptedException e) {
+			throw new CustomException(ErrorCode.ERROR_SYSTEM);
+		} finally {
+			rLock.unlock();
+		}
+
+		// CustomException이 터질때는 unlock을 못하고잇음
 	}
 }

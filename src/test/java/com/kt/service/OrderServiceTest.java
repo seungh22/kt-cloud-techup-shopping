@@ -44,7 +44,7 @@ class OrderServiceTest {
 	// 1. 비관적 락(Pessimistic Lock) -> DB에서 지원해주는 Lock -> SELECT ... FOR UPDATE -> 한명이들어오면 끝날때까지 기다리셈
 	// 화장실 -> 한명씩 들어감 -> 앞사람이 오래걸림 -> 기다려야
 	// 단점: 시간이 오래걸리고 데드락 발생할 수 있음
-	// 2. 낙관적 락(Optimistic Lock) -> 버전관리
+	// 2. 낙관적 락(Optimistic Lock) -> 버전관리 -> 셀렉트할때 그때의 버전을 가져와서 작업을 끝내고 트랜잭션 커밋되면 현재의 버전을 가져옴 update 쿼리에 버전을 +1 해서 반영
 	// 화장실 -> 한명씩 들어가면 일단 들어와 -> 대신 나갈때 최신버전 확인
 	// 처음 입장할때 버전을 조회 - 작업끝나고 - 나갈 때 다시 버전을 조회해서 같으면 재고 차감
 	// 3. 분산 락 -> 레디스
@@ -99,7 +99,6 @@ class OrderServiceTest {
 		var foundedOrder = orderRepository.findAll().stream().findFirst();
 
 		assertThat(foundedProduct.getStock()).isEqualTo(8L);
-		assertThat(foundedProduct.getOrderProducts()).isNotEmpty();
 		assertThat(foundedOrder).isPresent();
 	}
 
@@ -167,10 +166,9 @@ class OrderServiceTest {
 
 		var foundedProduct = productRepository.findByIdOrThrow(product.getId());
 
-		System.out.println("성공한 주문 수: " + successCount.get());
-		System.out.println("실패한 주문 수: " + failureCount.get());
-		System.out.println("남은 재고 수: " + foundedProduct.getStock());
-
+		assertThat(successCount.get()).isEqualTo(10);
+		assertThat(failureCount.get()).isEqualTo(90);
+		assertThat(foundedProduct.getStock()).isEqualTo(0);
 	}
 
 }

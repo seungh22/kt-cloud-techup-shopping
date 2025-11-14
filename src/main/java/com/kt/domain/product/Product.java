@@ -64,6 +64,9 @@ public class Product extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status = ProductStatus.ACTIVATED;
 
+	// @Version
+	// private Long version;
+
 	@OneToMany(mappedBy = "product")
 	private List<OrderProduct> orderProducts = new ArrayList<>();
 
