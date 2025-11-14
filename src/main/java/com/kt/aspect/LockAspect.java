@@ -22,8 +22,8 @@ public class LockAspect {
 	@Around("@annotation(com.kt.common.Lock) && @annotation(lock)")
 	public Object lock(ProceedingJoinPoint joinPoint, Lock lock) throws Throwable {
 		var arguments = joinPoint.getArgs();
-		var productId = (Long)arguments[1];
-		var key = String.format("%s:%d", lock.key().name().toLowerCase(), productId);
+		var identity = (Long)arguments[lock.index()];
+		var key = String.format("%s:%d", lock.key().name().toLowerCase(), identity);
 
 		var rLock = redissonClient.getLock(key);
 

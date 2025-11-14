@@ -29,8 +29,12 @@ public class OrderService {
 	private final OrderProductRepository orderProductRepository;
 	private final RedissonClient redissonClient;
 
+	// reference , primitive
+	// 선택하는 기준 1번째 : null 가능?
+	// Long -> null, long -> 0
+	// Generic이냐 아니냐 -> Generic은 무조건 참조형
 	//주문생성
-	@Lock(key = Lock.Key.STOCK)
+	@Lock(key = Lock.Key.STOCK, index = 1)
 	public void create(
 		Long userId,
 		Long productId,
