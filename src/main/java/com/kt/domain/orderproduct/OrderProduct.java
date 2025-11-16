@@ -23,6 +23,11 @@ public class OrderProduct extends BaseEntity {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
-	// 주문생성되면 오더프로덕트도 같이 생성
+	public OrderProduct(Order order, Product product, Long quantity) {
+		this.order = order;
+		this.product = product;
+		this.quantity = quantity;
+	}
+
 
 }
