@@ -34,8 +34,8 @@ public class OrderService {
 		String receiverMobile,
 		Long quantity
 	) {
-		var product = productRepository.findByIdOrThrow(productId);
-
+		System.out.println("OrderService.create called " + productId);
+		var product = productRepository.findByIdPessimistic(productId).orElseThrow();
 		Preconditions.validate(product.canProvide(quantity), ErrorCode.NOT_ENOUGH_STOCK);
 
 		var user = userRepository.findByIdOrThrow(userId, ErrorCode.NOT_FOUND_USER);
