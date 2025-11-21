@@ -95,6 +95,12 @@ public class UserService {
 			.flatMap(order -> order.getOrderProducts().stream()
 				.map(orderProduct -> orderProduct.getProduct().getName())).toList();
 
+		// var statuses = orders.stream()
+		// 	.flatMap(order -> order.getOrderProducts().stream()
+		// 		.map(orderProduct -> orderProduct.getOrder().getStatus())).toList();
+
+		// N개의 주문이 있는데 N개의 주문엔 상품이 존재하는데 가짓수가 1만개
+
 		// Stream의 연산과정
 		// 1. 스트림생성
 		// 2. 중간연산 -> 여러번 가능 O
@@ -108,5 +114,10 @@ public class UserService {
 		// 3. batch fetch size 옵션 사용 -> 전역설정 -> paging동작원리와 같아서 성능이슈가 있을 수 있음
 		// 4. @BatchSize 어노테이션 사용 -> 특정 엔티티에만 적용 가능
 		// 5. native query 사용해서 해결
+
+		// Collection, stream, foreach
+
+		// 연관관계를 아예 끊는다 -> 엔티티자체를 느슨하게 결합해둔다.
+		// JPA를 안쓴다.
 	}
 }
