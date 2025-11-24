@@ -6,12 +6,14 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.kt.common.support.Message;
 
 import lombok.RequiredArgsConstructor;
 
 // @ServletComponentScan
+@EnableAsync
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @RequiredArgsConstructor
