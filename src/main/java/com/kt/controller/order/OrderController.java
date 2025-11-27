@@ -30,7 +30,7 @@ public class OrderController {
 		@AuthenticationPrincipal CurrentUser currentUser,
 		@RequestBody @Valid OrderRequest.Create request) {
 		orderService.create(
-			currentUser.getId(),
+			1L,
 			request.productId(),
 			request.receiverName(),
 			request.receiverAddress(),

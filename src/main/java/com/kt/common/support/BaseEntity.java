@@ -1,7 +1,5 @@
 package com.kt.common.support;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,11 +8,8 @@ import lombok.Getter;
 
 @Getter
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseEntity extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
-
-	protected LocalDateTime createdAt;
-	protected LocalDateTime updatedAt;
 }
